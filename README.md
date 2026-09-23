@@ -15,6 +15,7 @@ Click on any guide below for detailed, step-by-step instructions:
 | **[GUIDE_REMOTE_ACCESS_AND_STARTUP.md](docs/GUIDE_REMOTE_ACCESS_AND_STARTUP.md)** | Step-by-step instructions for powering up the robot, safety contactors (blue button), Wi-Fi/Ethernet network setup, connecting via Remote Desktop (RDP) on Linux/Windows/Mac, and headless HDMI operation. | Beginners, Operators, Everyone |
 | **[GUIDE_CONTROL_MODES.md](docs/GUIDE_CONTROL_MODES.md)** | Complete guide to operating the robot: **Mode 1** (PS4 Gamepad teleop with deadman switch), **Mode 2** (Interactive safe keyboard driving), and **Mode 3** (Autonomous Nav2 navigation), plus camera, battery monitor, and radar tools. | Drivers, Operators, Researchers |
 | **[GUIDE_DEVELOPER_CUSTOMIZATION.md](docs/GUIDE_DEVELOPER_CUSTOMIZATION.md)** | Comprehensive developer guide covering software architecture, exact file paths, bash build commands (`colcon build`), automated test suite, and step-by-step recipes to adjust max speeds, acceleration ramps, deadbands, and sensor topics. | Developers, Researchers, Engineers |
+| **[README_script.md](scripts/README_script.md)** | Dedicated user guide for all automation scripts (`setup_system.sh`, `start_kairos.sh`, `launch_cockpit.sh`, `view_camera.sh`, `view_lidar.sh`) and workspace reproduction manifest (`kairos_dependencies.repos`). | Operators, Developers, Administrators |
 
 ---
 
@@ -33,10 +34,11 @@ If you are already familiar with the safety procedures, here is the fastest way 
    - Open **Remmina** (or Windows `mstsc` / Mac Remote Desktop) and connect to **`192.168.0.183`** (Username: `kairos`, Password: `kairos`).
 
 3. **Launch the Navigation Cockpit:**
-   Open a terminal and run:
+   Open a terminal and run (either from home or from `scripts/`):
    ```bash
    # Option A: Interactive Control Menu
    /home/kairos/start_kairos.sh
+   # (or: ./src/kairos_real_bringup/scripts/start_kairos.sh)
 
    # Option B: Direct PS4 Gamepad Driving
    /home/kairos/launch_cockpit.sh 1
@@ -76,6 +78,11 @@ The workspace at `/home/kairos/kairos_ws/` has been purged of all unrelated arm/
 ├── TesolloHand DG-5F/          # Tesollo Hand utilities and configurations (KEPT in workspace)
 └── src/
     ├── kairos_real_bringup/     # Native ROS 2 hardware drivers (Motors, SICK LiDARs, IMU, LEDs, GUI)
+    │   ├── kairos_dependencies.repos # VCS manifest for cloning all workspace repositories
+    │   ├── README_script.md    # Dedicated scripts documentation guide
+    │   ├── scripts/            # Operational, setup, and visualization scripts
+    │   ├── config/             # Hardware udev rules, EKF, Nav2, and RViz configurations
+    │   └── launch/             # ROS 2 launch files (base, lidar, camera, nav2, teleop)
     ├── kairos_base_bridge/     # Bridge interfaces and kinematics definitions
     ├── rbkairos_description/   # Robot URDF, 3D meshes & visual models
     ├── robotnik/               # Robotnik description and simulation dependencies
