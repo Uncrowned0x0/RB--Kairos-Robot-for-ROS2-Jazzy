@@ -1,0 +1,13 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# ROS 2 build / install artifacts
+build/
+install/
+log/
+*.egg-info/
+dist/

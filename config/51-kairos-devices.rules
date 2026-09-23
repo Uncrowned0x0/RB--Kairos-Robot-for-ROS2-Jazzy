@@ -1,0 +1,8 @@
+# ==============================================================================
+# RB-KAIROS Udev Device Rules (ROS 2 Jazzy)
+# ==============================================================================
+# 1. VectorNav VN-100 Inertial Measurement Unit (FTDI FT232R)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{serial}=="FTBWZI3U", SYMLINK+="ttyUSB_IMU", GROUP="dialout", MODE="0666"
+
+# 2. Teensyduino LED Signal Controller (PJRC Teensy 3.2)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="0483", SYMLINK+="ttyUSB_LEDS", GROUP="dialout", MODE="0666"

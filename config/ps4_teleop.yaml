@@ -1,0 +1,65 @@
+joy_node:
+  ros__parameters:
+    device_id: 0
+    deadzone: 0.08
+    autorepeat_rate: 20.0
+
+kairos_teleop_joy:
+  ros__parameters:
+    # Axis mapping (Standard Linux joy_node for DualShock 4)
+    axis_linear_x: 1         # Left stick vertical: Forward / Backward (v_x)
+    axis_linear_y: 0         # Left stick horizontal: Lateral strafe (v_y holonomic Mecanum)
+    axis_angular_z: 3        # Right stick horizontal: Rotation left / right (omega_z)
+    axis_mecanum_l2: 2       # L2 analog trigger
+    axis_mecanum_r2: 5       # R2 analog trigger
+    axis_dpad_x: 6           # D-pad horizontal: Micro-strafe left/right
+    axis_dpad_y: 7           # D-pad vertical: Micro-step forward/backward
+
+    # Button mapping (DualShock 4 standard indices)
+    button_deadman: 5        # R1: Primary Deadman switch (must be held to allow movement)
+    button_deadman_alt: 6    # L2: Optional Secondary Deadman switch
+    button_turbo: 4          # L1: Turbo speed boost (hold L1 while moving stick)
+    button_mecanum_toggle: 7 # R2: Mecanum holonomic mode toggle / trigger
+    button_mecanum_l2: 6     # L2: Mecanum holonomic mode trigger / toggle
+    button_rotate_left: 4    # L1: Optional in-place rotate left (only if enable_bumper_rotation is true)
+    button_rotate_right: 5   # R1: Optional in-place rotate right (only if enable_bumper_rotation is true)
+
+    # Safe velocity ceilings (strictly enforced matching motor driver limits)
+    scale_linear_x: 0.08         # Standard forward/backward crawl speed (m/s)
+    scale_linear_y: 0.08         # Standard lateral strafe speed (m/s)
+    scale_angular_z: 0.20        # Standard rotation speed (rad/s)
+    scale_linear_x_turbo: 0.15   # Max ceiling forward/backward speed with turbo (m/s)
+    scale_linear_y_turbo: 0.15   # Max ceiling lateral strafe speed with turbo (m/s)
+    scale_angular_z_turbo: 0.30  # Max ceiling rotation speed with turbo (rad/s)
+    scale_fine_linear: 0.04      # Precision D-pad micro-step speed (m/s)
+
+    # Behavior
+    require_deadman: true        # Safety: require holding deadman switch to move
+    allow_any_deadman: false     # Strictly require deadman button to authorize movement
+    allow_alt_deadman: false     # Require R1 exclusively for deadman authorization
+    enable_bumper_rotation: false # CRITICAL: False ensures holding Deadman R1 never causes spurious rotation
+    mecanum_mode_default: false  # Start in Differential mode; pulling or tapping R2/L2 triggers Mecanum mode
+    deadzone: 0.08               # Joystick deadband to eliminate stick drift
+    cmd_timeout: 0.35            # Watchdog timeout to halt if gamepad disconnects
+
+teleop_twist_joy_node:
+  ros__parameters:
+    axis_linear:
+      x: 1  # Left stick vertical: Forward / Backward (v_x)
+      y: 0  # Left stick horizontal: Lateral strafe (v_y holonomic Mecanum)
+    scale_linear:
+      x: 0.08  # Strict safe crawl speed (m/s)
+      y: 0.08  # Strict safe strafe speed (m/s)
+    scale_linear_turbo:
+      x: 0.15  # Max safe ceiling speed with turbo held (m/s)
+      y: 0.15  # Max safe strafe speed with turbo held (m/s)
+
+    axis_angular:
+      yaw: 3  # Right stick horizontal (index 3, NOT index 2 which is L2 trigger)
+    scale_angular:
+      yaw: 0.20  # Safe rotation rate (rad/s)
+    scale_angular_turbo:
+      yaw: 0.30  # Max rotation rate with turbo held (rad/s)
+
+    enable_button: 5        # R1: Deadman switch
+    enable_turbo_button: 4  # L1: Turbo switch
