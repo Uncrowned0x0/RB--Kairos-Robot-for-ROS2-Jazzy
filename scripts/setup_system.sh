@@ -70,39 +70,31 @@ $SUDO usermod -a -G dialout,tty "$TARGET_USER"
 echo -e "      ${GREEN}[OK] Added '${TARGET_USER}' to groups 'dialout' and 'tty'.${NC}"
 
 # ------------------------------------------------------------------------------
-# 4. Configure SocketCAN can0 Interface
+# 4. Configure SocketCAN can0 Interface (Persistent via systemd)
 # ------------------------------------------------------------------------------
 echo -e "\n${BOLD}${GREEN}[4/5]${NC} ${BOLD}Configuring SocketCAN interface (can0 @ 1,000,000 baud)...${NC}"
-# Load kernel modules if available
-$SUDO modprobe can 2>/dev/null || true
-$SUDO modprobe can_raw 2>/dev/null || true
-$SUDO modprobe can_dev 2>/dev/null || true
-
-if ip link show can0 >/dev/null 2>&1; then
-    $SUDO ip link set can0 down 2>/dev/null || true
-    $SUDO ip link set can0 type can bitrate 1000000
-    $SUDO ip link set can0 up
-    if ip link show can0 2>/dev/null | grep -q "state UP"; then
-        echo -e "      ${GREEN}[OK] can0 is UP and active at 1,000,000 baud (1 Mbps).${NC}"
-    else
-        echo -e "      ${YELLOW}[INFO] can0 configured at 1 Mbps. Link will turn UP when bus transceivers are powered.${NC}"
-    fi
+if [ -f "$SCRIPT_DIR/kairos-can.service" ]; then
+    $SUDO cp "$SCRIPT_DIR/kairos-can.service" /etc/systemd/system/
+    $SUDO systemctl daemon-reload
+    $SUDO systemctl enable kairos-can.service
+    $SUDO systemctl start kairos-can.service || true
+    echo -e "      ${GREEN}[OK] Systemd service kairos-can.service installed and enabled.${NC}"
 else
-    echo -e "      ${YELLOW}[WARNING] Interface can0 not found. Connect the CAN-to-USB/PCIe interface and rerun.${NC}"
+    echo -e "      ${RED}[ERROR] kairos-can.service not found in ${SCRIPT_DIR}!${NC}"
 fi
 
 # ------------------------------------------------------------------------------
-# 5. Static Network Routing for SICK LiDARs
+# 5. Static Network Routing for SICK LiDARs (Persistent via systemd)
 # ------------------------------------------------------------------------------
 echo -e "\n${BOLD}${GREEN}[5/5]${NC} ${BOLD}Configuring static Ethernet routing for SICK LiDARs (enp3s0)...${NC}"
-if ip link show enp3s0 >/dev/null 2>&1; then
-    $SUDO ip link set enp3s0 up 2>/dev/null || true
-    $SUDO ip route replace 192.168.0.10 dev enp3s0 2>/dev/null || $SUDO ip route add 192.168.0.10 dev enp3s0 2>/dev/null
-    $SUDO ip route replace 192.168.0.11 dev enp3s0 2>/dev/null || $SUDO ip route add 192.168.0.11 dev enp3s0 2>/dev/null
-    echo -e "      ${GREEN}[OK] Route 192.168.0.10 dev enp3s0 established.${NC}"
-    echo -e "      ${GREEN}[OK] Route 192.168.0.11 dev enp3s0 established.${NC}"
+if [ -f "$SCRIPT_DIR/kairos-network.service" ]; then
+    $SUDO cp "$SCRIPT_DIR/kairos-network.service" /etc/systemd/system/
+    $SUDO systemctl daemon-reload
+    $SUDO systemctl enable kairos-network.service
+    $SUDO systemctl start kairos-network.service || true
+    echo -e "      ${GREEN}[OK] Systemd service kairos-network.service installed and enabled.${NC}"
 else
-    echo -e "      ${YELLOW}[WARNING] Ethernet interface enp3s0 not found.${NC}"
+    echo -e "      ${RED}[ERROR] kairos-network.service not found in ${SCRIPT_DIR}!${NC}"
 fi
 
 # ------------------------------------------------------------------------------

@@ -1,0 +1,17 @@
+[Unit]
+Description=RB-KAIROS SocketCAN interface (can0) at 1Mbps
+After=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/sbin/modprobe can
+ExecStartPre=/sbin/modprobe can_raw
+ExecStartPre=/sbin/modprobe can_dev
+ExecStartPre=-/sbin/ip link set can0 down
+ExecStart=/sbin/ip link set can0 type can bitrate 1000000
+ExecStartPost=/sbin/ip link set can0 up
+ExecStop=/sbin/ip link set can0 down
+
+[Install]
+WantedBy=multi-user.target

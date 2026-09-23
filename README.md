@@ -91,4 +91,23 @@ The workspace at `/home/kairos/kairos_ws/` has been purged of all unrelated arm/
 
 ---
 
+## ⚙️ Environment Variables & Robot Parameters (`robot_params/`)
+
+The directory `/home/kairos/kairos_ws/robot_params/` contains several `.env` files (e.g., `battery_params.env`, `navigation_params.env`, `sensors_params.env`, `manipulation_params.env`, `bringup.env`, etc.).
+These files store critical runtime parameters inherited from the legacy ROS 1 configuration of the robot. They define hardware-specific variables like sensor IP addresses, calibration offsets, and physical limits.
+**Note:** These `.env` files are intentionally excluded from the GitHub repository (`.gitignore`) because they contain machine-specific data that varies between individual robot units. 
+
+---
+
+## 🛠️ Recent Improvements & Implementations
+
+Recent enhancements have been made to increase the robustness of the system:
+
+1. **SocketCAN Persistence (Systemd)**: The `can0` interface is now automatically configured and brought up at system boot via the `kairos-can.service` systemd unit, ensuring the 1Mbps bitrate is set without manual intervention.
+2. **LiDAR Network Routes Persistence**: Static routing for the SICK LiDARs (`192.168.0.10` and `192.168.0.11` via `enp3s0`) is automatically established at boot by the `kairos-network.service` systemd unit.
+3. **Hardware Diagnostic Script**: A new script `scripts/check_hardware.sh` performs a fast pre-flight check of all critical peripherals (CAN bus, IMU, LEDs, and both LiDARs) reporting PASS/FAIL status.
+4. **Dependency Validation**: All repositories listed in `kairos_dependencies.repos` have been checked for valid URLs and correct Git branches to ensure seamless workspace reproduction.
+
+---
+
 *Author: Kamil BENMADI (<kamil.benmadi@sigma-clermont.fr>) — [GitHub](https://github.com/Uncrowned0x0) | [LinkedIn](https://www.linkedin.com/in/kamilb-)*

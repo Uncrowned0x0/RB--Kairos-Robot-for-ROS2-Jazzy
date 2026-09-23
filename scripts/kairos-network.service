@@ -1,0 +1,16 @@
+[Unit]
+Description=RB-KAIROS SICK LiDAR Static Routes
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=-/sbin/ip link set enp3s0 up
+ExecStart=/sbin/ip route replace 192.168.0.10 dev enp3s0
+ExecStart=/sbin/ip route replace 192.168.0.11 dev enp3s0
+ExecStop=/sbin/ip route del 192.168.0.10 dev enp3s0
+ExecStop=/sbin/ip route del 192.168.0.11 dev enp3s0
+
+[Install]
+WantedBy=multi-user.target
