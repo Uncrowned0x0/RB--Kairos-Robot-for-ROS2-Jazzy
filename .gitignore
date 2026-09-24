@@ -11,3 +11,9 @@ install/
 log/
 *.egg-info/
 dist/
+
+# Machine-specific robot parameter files (ROS 1 legacy .env configs)
+# These live in /home/kairos/kairos_ws/robot_params/ and must NOT be versioned.
+# See README.md § "Environment Variables & Robot Parameters" for details.
+*.env
+robot_params/
